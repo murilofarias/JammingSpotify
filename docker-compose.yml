@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: jamming-backend:local
+    environment:
+      PORT: 8787
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:5173
+      SESSION_SECRET: ${SESSION_SECRET:-dev-only-session-secret-please-override-32chars}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID:-fixture-client-id}
+      SPOTIFY_REDIRECT_URI: http://localhost:8787/auth/callback
+      SPOTIFY_SCOPES: user-read-private user-read-email user-top-read user-read-currently-playing playlist-modify-public playlist-modify-private
+      FRONTEND_POST_LOGIN_URL: http://localhost:5173/app
+      SPOTIFY_FIXTURE_MODE: ${SPOTIFY_FIXTURE_MODE:-true}
+      CACHE_TTL_SECONDS: 90
+    ports:
+      - '8787:8787'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:8787/api/health').then(r => { if (!r.ok) process.exit(1); })",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: jamming-frontend:local
+    environment:
+      VITE_BACKEND_URL: http://backend:8787
+    ports:
+      - '5173:80'
+    depends_on:
+      - backend
