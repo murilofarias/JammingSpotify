@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --------------------------------------------------------------------------
+ * Global surface
+ * ------------------------------------------------------------------------ */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: #0a0a0a;
+  background-image:
+    radial-gradient(1200px 600px at 10% -10%, rgba(29, 185, 84, 0.12), transparent 60%),
+    radial-gradient(800px 500px at 110% 20%, rgba(139, 92, 246, 0.09), transparent 60%),
+    radial-gradient(700px 500px at 50% 120%, rgba(6, 182, 212, 0.07), transparent 60%);
+  background-attachment: fixed;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin scrollbars for dense lists. */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+@layer components {
+  /* --- Glassmorphism card ---
+   * A single reusable surface with backdrop blur, soft border, and a
+   * hover glow. Kept here rather than in the component so it stays
+   * consistent across the whole app.
+   */
+  .glass {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-card;
+  }
+  .glass-hover {
+    @apply transition-all duration-200 hover:border-white/20 hover:bg-white/[0.06] hover:shadow-glow;
+  }
+
+  /* Primary Spotify-style button. */
+  .btn-spotify {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-spotify-green px-6 py-3
+           font-semibold text-black transition-all
+           hover:-translate-y-px hover:bg-[#1ed760] hover:shadow-glow
+           active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15
+           bg-white/5 px-5 py-2.5 text-sm font-medium text-white/90 transition-colors
+           hover:border-white/30 hover:bg-white/10 disabled:opacity-50;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white
+           placeholder-white/40 outline-none transition focus:border-spotify-green focus:bg-white/[0.06]
+           focus:shadow-glow;
+  }
+
+  .heading {
+    @apply font-semibold tracking-tight;
+  }
+
+  .mono {
+    @apply font-mono text-[13px] text-white/70;
+  }
+}
+
+/* Radar-chart dark theming tweaks for recharts. */
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric-polygon {
+  stroke: rgba(255, 255, 255, 0.12) !important;
+}
+.recharts-polar-angle-axis-tick text {
+  fill: rgba(255, 255, 255, 0.6) !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
